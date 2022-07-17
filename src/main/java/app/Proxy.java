@@ -6,19 +6,19 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 
-
 //TODO da definire la logica del proxy. Includo un semplice http server con infinite threadpool
+@SuppressWarnings("restriction")
 public class Proxy {
-	
-	private HttpServer server=null;
-	private int port=-1;
-	private int backlogSize=-1;
 
-	public Proxy(Class<? extends HttpHandler> prxLogic,int port, int backlogSize) {
-		this.port=port;
-		this.backlogSize=backlogSize;
+	private HttpServer server = null;
+	private int port = -1;
+	private int backlogSize = -1;
+
+	public Proxy(Class<? extends HttpHandler> prxLogic, int port, int backlogSize) {
+		this.port = port;
+		this.backlogSize = backlogSize;
 		try {
-			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1",port), this.backlogSize);
+			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", port), this.backlogSize);
 			Constructor<? extends HttpHandler> c;
 			try {
 				c = prxLogic.getDeclaredConstructor();
@@ -30,7 +30,7 @@ public class Proxy {
 				e.printStackTrace();
 			}
 			try {
-				this.server.createContext("/",prxLogic.newInstance());
+				this.server.createContext("/", prxLogic.newInstance());
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -42,5 +42,13 @@ public class Proxy {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void start() {
+		this.server.start();
+	}
+	
+	public void stop() {
+		this.server.stop(2);
 	}
 }

@@ -9,25 +9,26 @@ import userTest.userThread;
 
 public class Main {
 
+	private static Integer tgtPort=null;
+	private static Integer prxPort=null;
+
 	public static void main(String[] args) {
-		// TODO aggingere CLI parameters
-		// TODO randere il proxy un task in background
-		
+		Main.getCliOptions(args);
+
 		SimpleProxy.setTgtHost("localhost");
-		SimpleProxy.setTgtPort(4000);
-		
-		Proxy p = new Proxy(SimpleProxy.class, 3000, 4000);
+		SimpleProxy.setTgtPort(Main.tgtPort);
+
+		Proxy p = new Proxy(SimpleProxy.class, Main.prxPort, 4000);
 		p.start();
 
 	}
-	
+
 	public static void getCliOptions(String[] args) {
 
 		int c;
-		LongOpt[] longopts = new LongOpt[3];
+		LongOpt[] longopts = new LongOpt[2];
 		longopts[0] = new LongOpt("tgtPort", LongOpt.REQUIRED_ARGUMENT, null, 0);
-		longopts[1] = new LongOpt("tgtHost", LongOpt.REQUIRED_ARGUMENT, null, 1);
-		longopts[2] = new LongOpt("prxPort", LongOpt.REQUIRED_ARGUMENT, null, 2);
+		longopts[1] = new LongOpt("prxPort", LongOpt.REQUIRED_ARGUMENT, null, 1);
 
 		Getopt g = new Getopt("ddctrl", args, "", longopts);
 		g.setOpterr(true);
@@ -35,31 +36,14 @@ public class Main {
 			switch (c) {
 			case 0:
 				try {
-					Main.isEmu = Integer.valueOf(g.getOptarg()) > 0 ? true : false;
-				} catch (NumberFormatException e) {
-					System.err.println(String.format("%s is not valid, it must be 0 or 1.", g.getOptarg()));
+					Main.tgtPort = Integer.valueOf(g.getOptarg());
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				break;
 			case 1:
 				try {
-					if (!Main.validate(g.getOptarg())) {
-						throw new Exception(String.format("%s is not a valid jedis HOST", g.getOptarg()));
-					}
-					Main.jedisHost = String.valueOf(g.getOptarg());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				break;
-			case 2:
-				try {
-					Main.tier2Host = String.valueOf(g.getOptarg()); 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				break;
-			case 3:
-				try {
-					Main.cgv2 = Integer.valueOf(g.getOptarg()) > 0 ? true : false; 
+					Main.prxPort = Integer.valueOf(g.getOptarg());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

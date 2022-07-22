@@ -59,8 +59,8 @@ public class SimpleProxy implements HttpHandler {
 		OutputStream outputStream = req.getResponseBody();
 		req.sendResponseHeaders(200, resp.body().length());
 		outputStream.write(resp.body().getBytes());
-		outputStream.flush();
-		//outputStream.close();
+		//outputStream.flush();
+		outputStream.close();
 		outputStream = null;
 	}
 

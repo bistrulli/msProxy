@@ -1,11 +1,9 @@
 package app;
 
-import java.util.concurrent.TimeUnit;
-
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import kong.unirest.Unirest;
 import proxyLogic.SimpleProxy;
-import userTest.userThread;
 
 public class Main {
 
@@ -13,6 +11,9 @@ public class Main {
 	private static Integer prxPort=null;
 
 	public static void main(String[] args) {
+		
+		Unirest.config().concurrency(2000,2000); 
+		
 		Main.getCliOptions(args);
 
 		SimpleProxy.setTgtHost("localhost");

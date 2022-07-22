@@ -53,5 +53,10 @@
 			<artifactId>java-getopt</artifactId>
 			<version>1.0.13</version>
 		</dependency>
+		<dependency>
+			<groupId>com.konghq</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>3.13.3</version>
+		</dependency>
 	</dependencies>
 </project>

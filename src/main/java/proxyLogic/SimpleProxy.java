@@ -55,12 +55,12 @@ public class SimpleProxy implements HttpHandler {
 		
 
 		req.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
-		req.getResponseHeaders().set("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");
+		//req.getResponseHeaders().set("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");
 		OutputStream outputStream = req.getResponseBody();
 		req.sendResponseHeaders(200, resp.body().length());
 		outputStream.write(resp.body().getBytes());
 		outputStream.flush();
-		outputStream.close();
+		//outputStream.close();
 		outputStream = null;
 	}
 

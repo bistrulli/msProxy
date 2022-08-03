@@ -36,8 +36,9 @@ public class Main {
 			throw new Exception("ms "+Main.msName+" not found");
 		}
 		
-		Proxy p = new Proxy(SimpleProxy.class, Main.prxPort, Integer.MAX_VALUE);
-		p.setMs(msObs);
+		client.close();
+		
+		Proxy p = new Proxy(SimpleProxy.class, Main.prxPort, Integer.MAX_VALUE,msObs);
 		p.start();
 
 	}

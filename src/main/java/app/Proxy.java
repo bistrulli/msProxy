@@ -2,13 +2,17 @@ package app;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.bson.Document;
 
+import com.mongodb.client.MongoClient;
 import com.sun.net.httpserver.HttpServer;
 
+import mnt.Event;
+import mnt.EventMnt;
 import proxyLogic.AcquireHandler;
 
 @SuppressWarnings("restriction")
@@ -17,11 +21,13 @@ public class Proxy {
 	private HttpServer server = null;
 	private int port = -1;
 	private int backlogSize = -1;
-	private Document ms = null;
 	private ThreadPoolExecutor threadpool = null;
 	private Class<? extends Runnable> prxLogic = null;
+	private ConcurrentLinkedQueue<Event> events=null;
+	private EventMnt monitor=null;
+	private Document ms;
 
-	public Proxy(Class<? extends Runnable> prxLogic, int port, int backlogSize) {
+	public Proxy(Class<? extends Runnable> prxLogic, int port, int backlogSize,Document ms) {
 		this.port = port;
 		this.backlogSize = backlogSize;
 		this.prxLogic = prxLogic;
@@ -32,6 +38,10 @@ public class Proxy {
 			e.printStackTrace();
 		}
 		this.initThreadpool();
+		this.events=new ConcurrentLinkedQueue<Event>(); 
+		this.ms=ms;
+		this.monitor=new EventMnt(this,this.ms.getString("name"));
+		this.monitor.start();
 	}
 
 	public void start() {
@@ -40,14 +50,6 @@ public class Proxy {
 
 	public void stop() {
 		this.server.stop(2);
-	}
-
-	public Document getMs() {
-		return ms;
-	}
-
-	public void setMs(Document ms) {
-		this.ms = ms;
 	}
 
 	public void initThreadpool() {
@@ -60,5 +62,21 @@ public class Proxy {
 
 	public Class<? extends Runnable> getPrxLogic() {
 		return prxLogic;
+	}
+	
+	public void addEvent(Event evt) {
+		this.events.add(evt);
+	}
+
+	public ConcurrentLinkedQueue<Event> getEvents() {
+		return events;
+	}
+
+	public void setMs(Document ms) {
+		this.ms=ms;
+	}
+
+	public Document getMs() {
+		return ms;
 	}
 }

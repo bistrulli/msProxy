@@ -9,7 +9,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.internal.connection.Time;
 
 import app.Proxy;
 import kong.unirest.Unirest;
@@ -29,8 +28,7 @@ public class mainTest {
 			throw new Exception("ms "+"ms1"+" not found");
 		}
 		
-		Proxy p = new Proxy(SimpleProxy.class, 8081, Integer.MAX_VALUE);
-		p.setMs(msObs);
+		Proxy p = new Proxy(SimpleProxy.class, 8081, Integer.MAX_VALUE,msObs);
 		p.start();
 		
 		TimeUnit.SECONDS.sleep(3);

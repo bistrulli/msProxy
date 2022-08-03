@@ -3,24 +3,22 @@ package proxyLogic;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.Date;
 
 import org.bson.Document;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.sun.net.httpserver.HttpExchange;
 
 import app.Proxy;
 import kong.unirest.Unirest;
+import mnt.Event;
 
 public class SimpleProxy implements Runnable {
 
 	private String tgtHost = null;
 	private Integer tgtPort = null;
 	private HttpExchange req = null;
-	private MongoClient client;
 	private Proxy prx = null;
 	private MongoCollection<Document> rt = null;
 
@@ -39,19 +37,14 @@ public class SimpleProxy implements Runnable {
 	public SimpleProxy(Integer tgtPort, HttpExchange req, Proxy prx) {
 		this.tgtPort = tgtPort;
 		this.req = req;
-		this.client = MongoClients.create("mongodb://localhost:27017");
 		this.prx = prx;
-
-		MongoDatabase msDb = this.client.getDatabase(this.prx.getMs().getString("name"));
-		this.rt = msDb.getCollection("rt");
-		//System.out.println(this.rt.countDocuments());
 	}
 
 	@Override
 	public void run() {
 		switch (this.req.getRequestMethod()) {
 		case "GET": {
-			long st = System.currentTimeMillis();
+			long st = (new Date()).getTime();
 			String requestedURL = "http://%s:%d%s"
 					.formatted(new Object[] { this.req.getRequestHeaders().getFirst("Host").split(":")[0], this.tgtPort,
 							this.req.getRequestURI() });
@@ -69,9 +62,9 @@ public class SimpleProxy implements Runnable {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			this.rt.insertOne(new Document().append("st", st).append("end", System.currentTimeMillis()));
-			
-			this.client.close();
+			Event e=new Event(st, (new Date()).getTime());
+			this.prx.addEvent(e);
+			System.out.println(e.getEnd()-e.getStart());
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + this.req.getRequestMethod());

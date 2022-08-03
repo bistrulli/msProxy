@@ -1,4 +1,4 @@
-package proxyLogic;
+package userTest;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,7 +14,7 @@ import app.Proxy;
 import kong.unirest.Unirest;
 import mnt.Event;
 
-public class SimpleProxy implements Runnable {
+public class TestProxy implements Runnable {
 
 	private String tgtHost = null;
 	private Integer tgtPort = null;
@@ -34,11 +34,10 @@ public class SimpleProxy implements Runnable {
 		return req;
 	}
 
-	public SimpleProxy(Integer tgtPort, HttpExchange req, Proxy prx) {
+	public TestProxy(Integer tgtPort, HttpExchange req, Proxy prx) {
 		this.tgtPort = tgtPort;
 		this.req = req;
 		this.prx = prx;
-		Unirest.config().concurrency(2000000, 2000000);
 	}
 
 	@Override

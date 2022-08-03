@@ -10,7 +10,6 @@ import com.mongodb.client.model.Filters;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import kong.unirest.Unirest;
 import proxyLogic.SimpleProxy;
 
 public class Main {
@@ -19,8 +18,6 @@ public class Main {
 	private static String msName = null;
 
 	public static void main(String[] args) throws Exception {
-
-		Unirest.config().concurrency(2000, 2000);
 
 		Main.getCliOptions(args);
 		

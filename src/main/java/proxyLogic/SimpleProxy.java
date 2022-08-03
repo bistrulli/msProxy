@@ -45,12 +45,14 @@ public class SimpleProxy implements Runnable {
 		switch (this.req.getRequestMethod()) {
 		case "GET": {
 			long st = (new Date()).getTime();
+			
 			String requestedURL = "http://%s:%d%s"
 					.formatted(new Object[] { this.req.getRequestHeaders().getFirst("Host").split(":")[0], this.tgtPort,
 							this.req.getRequestURI() });
 
-			kong.unirest.HttpResponse<String> resp = Unirest.get(URI.create(requestedURL).toString())
-					.header("Connection", "close").asString();
+			kong.unirest.HttpResponse<String> resp = Unirest.get(URI.create(requestedURL).toString()).asString();
+			
+			Event e=new Event(st, (new Date()).getTime());
 
 			req.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
 			req.getResponseHeaders().set("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");
@@ -62,7 +64,6 @@ public class SimpleProxy implements Runnable {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			Event e=new Event(st, (new Date()).getTime());
 			this.prx.addEvent(e);
 			System.out.println(e.getEnd()-e.getStart());
 		}

@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import app.Proxy;
+import kong.unirest.Unirest;
 
 public class AcquireHandler implements HttpHandler {
 
@@ -17,12 +18,17 @@ public class AcquireHandler implements HttpHandler {
 
 	public AcquireHandler(Proxy prx) {
 		this.prx = prx;
+		Unirest.config().concurrency(2000000, 2000000);
+		Unirest.config().automaticRetries(false);
+		Unirest.config().cacheResponses(false);
+		Unirest.config().connectTimeout(0);
+		Unirest.config().socketTimeout(0);
 	}
 
 	public Integer pickReplica() {
 		// per il momento e raound robin
 		Integer port = ((List<Integer>) this.prx.getMs().get("ports")).get(0);
-		Collections.rotate((List<Integer>) this.prx.getMs().get("ports"), 1);
+		//Collections.rotate((List<Integer>) this.prx.getMs().get("ports"), 1);
 		return port;
 	}
 

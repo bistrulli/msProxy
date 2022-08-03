@@ -38,7 +38,6 @@ public class SimpleProxy implements Runnable {
 		this.tgtPort = tgtPort;
 		this.req = req;
 		this.prx = prx;
-		Unirest.config().concurrency(2000000, 2000000);
 	}
 
 	@Override

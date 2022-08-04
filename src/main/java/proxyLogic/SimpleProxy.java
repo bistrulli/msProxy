@@ -44,8 +44,8 @@ public class SimpleProxy implements Runnable {
 	public void run() {
 		switch (this.req.getRequestMethod()) {
 		case "GET": {
-			long st = (new Date()).getTime();
 			
+			long st = (new Date()).getTime();
 			String requestedURL = "http://%s:%d%s"
 					.formatted(new Object[] { this.req.getRequestHeaders().getFirst("Host").split(":")[0], this.tgtPort,
 							this.req.getRequestURI() });
@@ -65,7 +65,6 @@ public class SimpleProxy implements Runnable {
 				e1.printStackTrace();
 			}
 			this.prx.addEvent(e);
-			System.out.println(e.getEnd()-e.getStart());
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + this.req.getRequestMethod());

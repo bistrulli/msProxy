@@ -19,7 +19,7 @@ public class AcquireHandler implements HttpHandler {
 
 	public AcquireHandler(Proxy prx) {
 		this.prx = prx;
-		Unirest.config().concurrency(20000, 20000);
+		Unirest.config().concurrency(2000, 2000);
 		Unirest.config().automaticRetries(false);
 		Unirest.config().cacheResponses(false);
 		Unirest.config().connectTimeout(0);

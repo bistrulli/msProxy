@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.bson.Document;
 
-import com.mongodb.client.MongoClient;
 import com.sun.net.httpserver.HttpServer;
 
 import mnt.Event;
@@ -32,9 +31,9 @@ public class Proxy {
 		this.backlogSize = backlogSize;
 		this.prxLogic = prxLogic;
 		try {
-			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", port), this.backlogSize);
-			//this.server.createContext("/", new AcquireHandler(this));
-			this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+			this.server = HttpServer.create(new InetSocketAddress("localhost", port), this.backlogSize);
+			this.server.createContext("/", new AcquireHandler(this));
+			//this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

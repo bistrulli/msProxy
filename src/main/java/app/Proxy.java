@@ -33,8 +33,8 @@ public class Proxy {
 		this.prxLogic = prxLogic;
 		try {
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", port), this.backlogSize);
-			this.server.createContext("/", new AcquireHandler(this));
-			//this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+			//this.server.createContext("/", new AcquireHandler(this));
+			this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,8 +54,8 @@ public class Proxy {
 	}
 
 	public void initThreadpool() {
-		//this.threadpool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-		this.threadpool = (ThreadPoolExecutor) Executors.newFixedThreadPool(200);
+		this.threadpool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+		//this.threadpool = (ThreadPoolExecutor) Executors.newFixedThreadPool(200);
 	}
 
 	public ThreadPoolExecutor getThreadpool() {

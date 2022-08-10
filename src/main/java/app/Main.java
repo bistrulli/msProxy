@@ -10,6 +10,7 @@ import com.mongodb.client.model.Filters;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import kong.unirest.Unirest;
 import proxyLogic.SimpleProxy;
 
 public class Main {
@@ -34,6 +35,12 @@ public class Main {
 		}
 		
 		client.close();
+		
+		Unirest.config().concurrency(2000, 2000);
+		Unirest.config().automaticRetries(false);
+		Unirest.config().cacheResponses(false);
+		Unirest.config().connectTimeout(0);
+		Unirest.config().socketTimeout(0);
 		
 		Proxy p = new Proxy(SimpleProxy.class, Main.prxPort, Integer.MAX_VALUE,msObs);
 		p.start();

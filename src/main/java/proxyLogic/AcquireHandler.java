@@ -28,9 +28,8 @@ public class AcquireHandler implements HttpHandler {
 			this.ports = ((List<Integer>) this.prx.getMs().get("ports"));
 		}
 			
-
 		int port = this.ports.get(0);
-		Collections.rotate(this.ports, 1);
+		//Collections.rotate(this.ports, 1);
 		return port;
 	}
 

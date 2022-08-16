@@ -14,15 +14,20 @@ import app.Proxy;
 public class AcquireHandler implements HttpHandler {
 
 	private Proxy prx = null;
+	private List<Integer> ports=null;
 	
 	public AcquireHandler(Proxy prx) {
 		this.prx = prx;
+		this.ports=null;
 	}
 
 	public Integer pickReplica() {
 		// per il momento e raound robin
-		Integer port = ((List<Integer>) this.prx.getMs().get("ports")).get(0);
-		Collections.rotate((List<Integer>) this.prx.getMs().get("ports"), 1);
+		if(this.ports==null)
+			this.ports = ((List<Integer>) this.prx.getMs().get("ports"));
+			
+		int port=this.ports.get(0);
+		Collections.rotate(this.ports, 1);
 		return port;
 	}
 

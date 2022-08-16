@@ -36,7 +36,7 @@ public class Main {
 		
 		client.close();
 		
-		Unirest.config().concurrency(200, 200);
+		Unirest.config().concurrency(2000, 2000);
 		Unirest.config().automaticRetries(false);
 		Unirest.config().cacheResponses(false);
 		Unirest.config().connectTimeout(0);

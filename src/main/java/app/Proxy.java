@@ -33,7 +33,7 @@ public class Proxy {
 		try {
 			this.server = HttpServer.create(new InetSocketAddress("localhost", port), this.backlogSize);
 			this.server.createContext("/", new AcquireHandler(this));
-			this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+			//this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

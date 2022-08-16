@@ -23,8 +23,11 @@ public class AcquireHandler implements HttpHandler {
 
 	public Integer pickReplica() {
 		// per il momento e raound robin
-		if (this.ports == null)
+		if (this.ports == null) {
+			System.out.println("get ports");
 			this.ports = ((List<Integer>) this.prx.getMs().get("ports"));
+		}
+			
 
 		int port = this.ports.get(0);
 		Collections.rotate(this.ports, 1);

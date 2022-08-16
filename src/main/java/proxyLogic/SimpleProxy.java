@@ -59,8 +59,8 @@ public class SimpleProxy implements Runnable {
 				e1.printStackTrace();
 			}
 
-//			Event e = new Event(st, (new Date()).getTime());
-//			this.prx.addEvent(e);
+			Event e = new Event(st, (new Date()).getTime());
+			this.prx.addEvent(e);
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + this.req.getRequestMethod());

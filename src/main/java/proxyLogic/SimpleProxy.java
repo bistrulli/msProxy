@@ -52,7 +52,7 @@ public class SimpleProxy implements Runnable {
 			req.getResponseHeaders().set("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");
 			OutputStream outputStream = req.getResponseBody();
 			try {
-				req.sendResponseHeaders(200, resp.getBody().length());
+				req.sendResponseHeaders(resp.getStatus(), resp.getBody().length());
 				outputStream.write(resp.getBody().getBytes());
 				outputStream.close();
 			} catch (IOException e1) {

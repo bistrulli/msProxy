@@ -54,6 +54,7 @@ public class SimpleProxy implements Runnable {
 			try {
 				req.sendResponseHeaders(resp.getStatus(), resp.getBody().length());
 				outputStream.write(resp.getBody().getBytes());
+				resp=null;
 				outputStream.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();

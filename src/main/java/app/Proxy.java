@@ -44,12 +44,6 @@ public class Proxy {
 		this.ms=ms;
 		this.monitor=new EventMnt(this,this.ms.getString("name"));
 		this.monitor.start();
-		
-		Unirest.config().concurrency(2000, 2000);
-		Unirest.config().automaticRetries(true);
-		Unirest.config().cacheResponses(false);
-		Unirest.config().connectTimeout(0);
-		Unirest.config().socketTimeout(0);
 	}
 
 	public void start() {

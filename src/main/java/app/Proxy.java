@@ -10,6 +10,7 @@ import org.bson.Document;
 
 import com.sun.net.httpserver.HttpServer;
 
+import kong.unirest.Unirest;
 import mnt.Event;
 import mnt.EventMnt;
 import proxyLogic.AcquireHandler;
@@ -33,7 +34,7 @@ public class Proxy {
 		try {
 			this.server = HttpServer.create(new InetSocketAddress("localhost", port), this.backlogSize);
 			this.server.createContext("/", new AcquireHandler(this));
-			this.server.setExecutor((ThreadPoolExecutor) Executors.newFixedThreadPool(100));
+			//this.server.setExecutor((ThreadPoolExecutor) Executors.newFixedThreadPool(100));
 			//this.server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -43,6 +44,12 @@ public class Proxy {
 		this.ms=ms;
 		this.monitor=new EventMnt(this,this.ms.getString("name"));
 		this.monitor.start();
+		
+		Unirest.config().concurrency(2000, 2000);
+		Unirest.config().automaticRetries(true);
+		Unirest.config().cacheResponses(false);
+		Unirest.config().connectTimeout(0);
+		Unirest.config().socketTimeout(0);
 	}
 
 	public void start() {

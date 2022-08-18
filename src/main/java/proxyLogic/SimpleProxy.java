@@ -41,7 +41,6 @@ public class SimpleProxy implements Runnable {
 		switch (this.req.getRequestMethod()) {
 		case "GET": {
 			
-			System.out.println("reqIn");
 
 			long st = (new Date()).getTime();
 			String requestedURL = "http://%s:%d%s"
@@ -50,7 +49,9 @@ public class SimpleProxy implements Runnable {
 
 			kong.unirest.HttpResponse<String> resp = Unirest.get(URI.create(requestedURL).toString()).asString();
 			
-			System.out.println("reqOut:"+resp.getStatus());
+			if(resp.getStatus()!=200)
+				System.err.println("eccolo");
+			
 
 			req.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
 			req.getResponseHeaders().set("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");

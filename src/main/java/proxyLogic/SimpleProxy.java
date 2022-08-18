@@ -49,9 +49,6 @@ public class SimpleProxy implements Runnable {
 
 			kong.unirest.HttpResponse<String> resp = Unirest.get(URI.create(requestedURL).toString()).asString();
 			
-			if(resp.getStatus()!=200)
-				System.err.println("eccolo");
-			
 
 			req.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
 			req.getResponseHeaders().set("Cache-Control", "no-store, no-cache, max-age=0, must-revalidate");

@@ -40,6 +40,7 @@ public class EventMnt extends Thread {
 			}
 			if(evts.size()>0)
 				msRT.insertMany(evts);
+			//lo devo rallentare per consumare meno cpu?
 		}
 	}
 }

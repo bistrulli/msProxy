@@ -1,6 +1,7 @@
 package mnt;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
 
@@ -40,7 +41,13 @@ public class EventMnt extends Thread {
 			}
 			if(evts.size()>0)
 				msRT.insertMany(evts);
-			//lo devo rallentare per consumare meno cpu?
+			
+			//lo rallento per consumare meno cpu
+			try {
+				TimeUnit.MILLISECONDS.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

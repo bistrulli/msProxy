@@ -39,14 +39,13 @@ public class EventMnt extends Thread {
 				evtDoc.append("st", event.getStart()).append("end", event.getEnd());
 				evts.add(evtDoc);
 			}
-			if(evts.size()>0)
+			if (evts.size() > 0)
 				msRT.insertMany(evts);
-			
-			//lo rallento per consumare meno cpu
+
 			try {
-				TimeUnit.MILLISECONDS.sleep(200);
+				TimeUnit.MILLISECONDS.sleep(500);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				e.printStackTrace(); 
 			}
 		}
 	}

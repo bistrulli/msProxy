@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import app.Proxy;
 import kong.unirest.Header;
-import kong.unirest.HttpRequestWithBody;
+import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import mnt.Event;
 
@@ -42,6 +45,9 @@ public class SimpleProxy implements Runnable {
 
 	@Override
 	public void run() {
+
+		System.out.println(this.req.getRequestMethod() + "Request");
+
 		switch (this.req.getRequestMethod()) {
 		case "GET": {
 			long st = (new Date()).getTime();
@@ -49,8 +55,6 @@ public class SimpleProxy implements Runnable {
 			String requestedURL = "http://%s:%d%s"
 					.formatted(new Object[] { this.req.getRequestHeaders().getFirst("Host").split(":")[0], this.tgtPort,
 							this.req.getRequestURI() });
-
-			System.out.println(requestedURL);
 
 			kong.unirest.HttpResponse<String> resp = Unirest.get(URI.create(requestedURL).toString()).asString();
 			this.copyRespHeader(resp, req);
@@ -75,12 +79,20 @@ public class SimpleProxy implements Runnable {
 			String requestedURL = "http://%s:%d%s"
 					.formatted(new Object[] { this.req.getRequestHeaders().getFirst("Host").split(":")[0], this.tgtPort,
 							this.req.getRequestURI() });
-			
-			
-			HttpRequestWithBody preq = Unirest.post(URI.create(requestedURL).toString());
-			preq=this.forwardPostParam(preq, req);
-			kong.unirest.HttpResponse<String> resp = preq.asString();
-			this.copyRespHeader(resp, req);
+
+			String mimeType = req.getRequestHeaders().get("Content-type").get(0);
+			String rqstBody = this.getRqstBody(req);
+			HttpResponse<String> resp=null;
+			if(mimeType.contains("application/x-www-form-urlencoded")) {
+				resp = Unirest.post(URI.create(requestedURL).toString()).contentType(mimeType)
+						.fields(this.getPostParam(rqstBody, mimeType)).asString();
+				this.copyRespHeader(resp, req);
+			}
+			if(mimeType.contains("application/json")) {
+				resp = Unirest.post(URI.create(requestedURL).toString()).contentType(mimeType)
+						.body(rqstBody).asString();
+				this.copyRespHeader(resp, req);
+			}
 
 			OutputStream outputStream = req.getResponseBody();
 			try {
@@ -102,16 +114,15 @@ public class SimpleProxy implements Runnable {
 	}
 
 	private void copyRespHeader(kong.unirest.HttpResponse<String> resp, HttpExchange req) {
-		//copio l'header della risposta
 		List<Header> headerList = resp.getHeaders().all();
 		for (Header header : headerList) {
-			if (!header.getName().equalsIgnoreCase("Transfer-Encoding"))
-				req.getResponseHeaders().set(header.getName(), header.getValue());
+			req.getResponseHeaders().set(header.getName(), header.getValue());
 		}
+		req.getResponseHeaders().remove(org.apache.http.HttpHeaders.CONNECTION);
+		req.getResponseHeaders().remove(org.apache.http.HttpHeaders.TRANSFER_ENCODING);
 	}
 
-	private HttpRequestWithBody forwardPostParam(HttpRequestWithBody preq, HttpExchange req) {
-		//di fatto copio il body della richiesta
+	private String getRqstBody(HttpExchange req) {
 		StringBuilder sb = new StringBuilder();
 		InputStream ios = req.getRequestBody();
 		int i;
@@ -122,8 +133,24 @@ public class SimpleProxy implements Runnable {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		preq.body(sb.toString());
-		return preq;
+		return sb.toString();
 	}
 
+	private HashMap<String, Object> getPostParam(String reqBody, String mimeType) {
+		String[] params = reqBody.split("&");
+		HashMap<String, Object> fields = new HashMap<>();
+		for (String param : params) {
+			String key = param.split("=")[0];
+			String value = param.split("=")[1];
+			try {
+				key = URLDecoder.decode(key, StandardCharsets.UTF_8.name());
+				value = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+				System.out.println("%s=%s".formatted(new String[] { key, value }));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			fields.put(key, value);
+		}
+		return fields;
+	}
 }

@@ -20,8 +20,8 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		
-		Unirest.config().concurrency(2000, 2000);
-		Unirest.config().automaticRetries(true);
+		Unirest.config().concurrency(500, 500);
+		//Unirest.config().automaticRetries(true);
 		Unirest.config().cacheResponses(false);
 		Unirest.config().connectTimeout(0);
 		Unirest.config().socketTimeout(0);

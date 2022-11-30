@@ -46,7 +46,7 @@ public class SimpleProxy implements Runnable {
 	@Override
 	public void run() {
 
-		System.out.println(this.req.getRequestMethod() + "Request");
+		//System.out.println(this.req.getRequestMethod() + "Request");
 
 		switch (this.req.getRequestMethod()) {
 		case "GET": {
@@ -145,7 +145,7 @@ public class SimpleProxy implements Runnable {
 			try {
 				key = URLDecoder.decode(key, StandardCharsets.UTF_8.name());
 				value = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
-				System.out.println("%s=%s".formatted(new String[] { key, value }));
+				//System.out.println("%s=%s".formatted(new String[] { key, value }));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -1,6 +1,7 @@
 package mnt;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
@@ -34,18 +35,22 @@ public class EventMnt extends Thread {
 		Event event = null;
 		while (true) {
 			ArrayList<Document> evts = new ArrayList<Document>();
-			while ((event = this.prx.getEvents().poll()) != null) {
-				Document evtDoc = new Document();
-				evtDoc.append("st", event.getStart()).append("end", event.getEnd());
-				evts.add(evtDoc);
+			if (this.prx.getEvents().size() > 100) {
+				//while ((event = this.prx.getEvents().poll()) != null) {
+				for (int i = 0; i <100; i++) {
+					event = this.prx.getEvents().poll();
+					Document evtDoc = new Document();
+					evtDoc.append("st", event.getStart()).append("end", event.getEnd());
+					evts.add(evtDoc);
+				}
+				if (evts.size() > 0)
+					msRT.insertMany(evts);
 			}
-			if (evts.size() > 0)
-				msRT.insertMany(evts);
-
+			
 			try {
 				TimeUnit.MILLISECONDS.sleep(500);
 			} catch (InterruptedException e) {
-				e.printStackTrace(); 
+				e.printStackTrace();
 			}
 		}
 	}

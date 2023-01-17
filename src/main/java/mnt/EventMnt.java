@@ -35,9 +35,9 @@ public class EventMnt extends Thread {
 		Event event = null;
 		while (true) {
 			ArrayList<Document> evts = new ArrayList<Document>();
-			if (this.prx.getEvents().size() > 100) {
+			if (this.prx.getEvents().size() > 10) {
 				//while ((event = this.prx.getEvents().poll()) != null) {
-				for (int i = 0; i <100; i++) {
+				for (int i = 0; i <10; i++) {
 					event = this.prx.getEvents().poll();
 					Document evtDoc = new Document();
 					evtDoc.append("st", event.getStart()).append("end", event.getEnd());
@@ -48,7 +48,7 @@ public class EventMnt extends Thread {
 			}
 			
 			try {
-				TimeUnit.MILLISECONDS.sleep(500);
+				TimeUnit.MILLISECONDS.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

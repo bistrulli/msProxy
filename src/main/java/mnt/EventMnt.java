@@ -35,7 +35,7 @@ public class EventMnt extends Thread {
 		Event event = null;
 		while (true) {
 			ArrayList<Document> evts = new ArrayList<Document>();
-			if (this.prx.getEvents().size() > 10) {
+			if (this.prx.getEvents().size() > 100) {
 				//while ((event = this.prx.getEvents().poll()) != null) {
 				for (int i = 0; i <10; i++) {
 					event = this.prx.getEvents().poll();

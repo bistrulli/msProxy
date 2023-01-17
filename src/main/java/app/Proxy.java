@@ -10,7 +10,6 @@ import org.bson.Document;
 
 import com.sun.net.httpserver.HttpServer;
 
-import kong.unirest.Unirest;
 import mnt.Event;
 import mnt.EventMnt;
 import proxyLogic.AcquireHandler;
@@ -55,8 +54,8 @@ public class Proxy {
 	}
 
 	public void initThreadpool() {
-		this.threadpool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-		//this.threadpool = (ThreadPoolExecutor) Executors.newFixedThreadPool(200);
+		//this.threadpool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+		this.threadpool = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
 	}
 
 	public ThreadPoolExecutor getThreadpool() {

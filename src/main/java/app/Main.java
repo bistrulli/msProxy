@@ -20,7 +20,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		
-		Unirest.config().concurrency(500, 500);
+		Unirest.config().concurrency(200, 200);
 		//Unirest.config().automaticRetries(true);
 		Unirest.config().cacheResponses(false);
 		Unirest.config().connectTimeout(0);

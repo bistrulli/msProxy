@@ -54,8 +54,8 @@ public class Proxy {
 	}
 
 	public void initThreadpool() {
-		//this.threadpool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-		this.threadpool = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
+		this.threadpool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+//		this.threadpool = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
 	}
 
 	public ThreadPoolExecutor getThreadpool() {
